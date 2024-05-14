@@ -13,13 +13,12 @@ def printHelp():
 
     ./dnsFlood.py [domain list file] <arg1, arg2, ...>
 
-    
     ARGUMENTS:
 
      -h | --help        print help
     -hl | --high-load   enable high load mode -> in this mode only the first 8 domains are looped at cpu speed with 8 threads
-    -sm | --src-mac     set source mac address
-    -dm | --dst-mac     set destination mac address
+    -sm | --src-mac     set source mac address -> fromat 00:00:00:00:00:00
+    -dm | --dst-mac     set destination mac address -> fromat 00:00:00:00:00:00
     -si | --src-ip      set source ip addess
     -di | --dst-ip      set destination ip address
 '''
