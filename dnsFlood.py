@@ -7,6 +7,24 @@ from random import randint
 from scapy import all as scapy
 from multiprocessing import Pool
 
+def printHelp():
+    helpString = '''
+    USAGE:
+
+    ./dnsFlood.py [domain list file] <arg1, arg2, ...>
+
+    
+    ARGUMENTS:
+
+     -h | --help        print help
+    -hl | --high-load   enable high load mode -> in this mode only the first 8 domains are looped at cpu speed with 8 threads
+    -sm | --src-mac     set source mac address
+    -dm | --dst-mac     set destination mac address
+    -si | --src-ip      set source ip addess
+    -di | --dst-ip      set destination ip address
+'''
+    print(helpString)
+
 def macCheck(macAddress):
     if re.search(r'((\d|[a-f]){2}:){5}(\d|[a-f]){2}',macAddress):
         return True
@@ -35,7 +53,8 @@ def main():
 
     srcMac,dstMac,srcIp,dstIp = '','','',''
 
-    if len(sys.argv) < 1:
+    if len(sys.argv) < 2:
+        printHelp()
         quit()
     else:
         i=1 
@@ -43,7 +62,8 @@ def main():
             if re.search(r'^(--|-)\S+', sys.argv[i]):
                 if sys.argv[i] == '--help' or sys.argv[i] == '-h':
                     i+=1
-                    pass
+                    printHelp()
+                    quit()
                 elif sys.argv[i] == '-hl' or sys.argv[i] == '--high-load':
                     probeMode = 'fast'
                     i+=1
@@ -53,6 +73,7 @@ def main():
                         i+=2
                     else:
                         print("[!] invalid mac address: " + sys.argv[i])
+                        printHelp()
                         quit()
                 elif sys.argv[i] == '-dm' or sys.argv[i] == '--dst-mac':
                     if macCheck(sys.argv[i+1]):
@@ -60,6 +81,7 @@ def main():
                         i+=2
                     else:
                         print("[!] invalid mac address: " + sys.argv[i+1])
+                        printHelp()
                         quit()
                 elif sys.argv[i] == '-si' or sys.argv[i] == '--src-ip':
                     if ipCheck(sys.argv[i+1]):
@@ -67,6 +89,7 @@ def main():
                         i+=2
                     else:
                         print("[!] invalid ip address: " + sys.argv[i+1])
+                        printHelp()
                         quit()
                 elif sys.argv[i] == '-di' or sys.argv[i] == '--dst-ip':
                     if ipCheck(sys.argv[i+1]):
@@ -74,9 +97,12 @@ def main():
                         i+=2
                     else:
                         print("[!] invalid ip address: " + sys.argv[i+1])
+                        printHelp()
                         quit()
                 else:
                     print("[!] invalid option: " + sys.argv[i])
+                    printHelp()
+                    quit()
             else:
                 dnsListFileN = sys.argv[i]
                 i+=1
@@ -89,6 +115,7 @@ def main():
 
     if srcMac == '' or srcIp == '' or dstIp == '' or dstMac == '':
         print("[!] invalid network parameters")
+        printHelp()
         quit()
 
 
